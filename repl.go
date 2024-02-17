@@ -44,6 +44,16 @@ func getCommands() map[string]cliCommand {
 			description: "Displays a help message",
 			callback:    callbackHelp,
 		},
+		"map": {
+			name:        "map",
+			description: "Displays the next page of locations",
+			callback:    callbackMapf,
+		},
+		"mapb": {
+			name:        "mapb",
+			description: "Displays the previous page of locations",
+			callback:    callbackMapb,
+		},
 		"exit": {
 			name:        "exit",
 			description: "Exit the Pokedex",
