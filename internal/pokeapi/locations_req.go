@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func (c *Client) GetLocationAreas(pageUrl *string) (LocationAreasResponse, error) {
+func (c *Client) GetLocationAreas(pageUrl *string) (LocationAreas, error) {
 	url := baseUrl + "/location-area"
 	if pageUrl != nil {
 		url = *pageUrl
@@ -15,34 +15,34 @@ func (c *Client) GetLocationAreas(pageUrl *string) (LocationAreasResponse, error
 
 	dat, ok := c.cache.Get(url)
 	if ok {
-		locationAreasResponse := LocationAreasResponse{}
+		locationAreasResponse := LocationAreas{}
 		err := json.Unmarshal(dat, &locationAreasResponse)
 		if err != nil {
-			return LocationAreasResponse{}, err
+			return LocationAreas{}, err
 		}
 		return locationAreasResponse, nil
 	}
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return LocationAreasResponse{}, err
+		return LocationAreas{}, err
 	}
 	res, err := c.httpClient.Do(req)
 	if err != nil {
-		return LocationAreasResponse{}, err
+		return LocationAreas{}, err
 	}
 	defer res.Body.Close()
 	if res.StatusCode > 399 {
-		return LocationAreasResponse{}, fmt.Errorf("bad status code: %v", res.StatusCode)
+		return LocationAreas{}, fmt.Errorf("bad status code: %v", res.StatusCode)
 	}
 	data, err := io.ReadAll(res.Body)
 	if err != nil {
-		return LocationAreasResponse{}, err
+		return LocationAreas{}, err
 	}
-	locationAreasResponse := LocationAreasResponse{}
+	locationAreasResponse := LocationAreas{}
 	err = json.Unmarshal(data, &locationAreasResponse)
 	if err != nil {
-		return LocationAreasResponse{}, err
+		return LocationAreas{}, err
 	}
 	c.cache.Add(url, data)
 	return locationAreasResponse, nil
